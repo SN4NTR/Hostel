@@ -15,7 +15,7 @@ public class HostelBuilder {
 
             for (int j = 0; j < Constants.ROOMS_ON_FLOOR.getValue(); j++) {
                 Room room = new Room();
-                room.setNumber((i + 1) * 10 + (j + 1));
+                room.setNumber((i + 1) * 100 + (j + 1));
 
                 boolean isClean = (int) (Math.random() * 2) == 1;
                 if (isClean) {

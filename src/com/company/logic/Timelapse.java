@@ -33,7 +33,7 @@ public class Timelapse {
         if ((month - 1) % Constants.YEAR_LENGTH.getValue() == 0) {
             System.out.println("\nStudent's settlement...\n");
             studentList = new ArrayList<>();
-            settleStudent(month, studentList);
+            settleStudent(studentList);
 
             if (needNewHeadman()) {
                 System.out.println();
@@ -77,31 +77,27 @@ public class Timelapse {
         resetHostelPayment();
     }
 
-    private void settleStudent(int month, List<Student> studentList) {
-        if (month == 1) {
-            new StudentBuilder().build(studentList, Constants.STUDENTS_AMOUNT.getValue());
-        } else {
-            System.out.print("Add new students? (y / n): ");
-            if ("y".equals(getAnswer("y", "n"))) {
-                int freePlaces = commandant.getHostelFreePlaces();
+    private void settleStudent(List<Student> studentList) {
+        System.out.print("Add new students? (y / n): ");
+        if ("y".equals(getAnswer("y", "n"))) {
+            int freePlaces = commandant.getHostelFreePlaces();
 
-                if (freePlaces == 0) {
-                    System.out.println("There is no free places!");
-                } else {
-                    System.out.print(freePlaces + " free places in the hotel.");
-                    System.out.print("\nEnter students number: ");
-                    Scanner scanner = new Scanner(System.in);
-                    int studentsAmount = scanner.nextInt();
+            if (freePlaces == 0) {
+                System.out.println("There is no free places!");
+            } else {
+                System.out.print(freePlaces + " free places in the hotel.");
+                System.out.print("\nEnter number of students: ");
+                Scanner scanner = new Scanner(System.in);
+                int studentsAmount = scanner.nextInt();
 
-                    while (studentsAmount <= 0 || studentsAmount > freePlaces) {
-                        System.out.print("Invalid value! Try again: ");
-                        studentsAmount = scanner.nextInt();
-                    }
-
-                    scanner.nextLine();
-                    System.out.println();
-                    new StudentBuilder().build(studentList, studentsAmount);
+                while (studentsAmount < 0 || studentsAmount > freePlaces) {
+                    System.out.print("Invalid value! Try again: ");
+                    studentsAmount = scanner.nextInt();
                 }
+
+                scanner.nextLine();
+                System.out.println();
+                new StudentBuilder().build(studentList, studentsAmount);
             }
         }
 
