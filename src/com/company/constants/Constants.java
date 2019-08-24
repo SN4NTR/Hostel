@@ -8,8 +8,8 @@ public enum Constants {
     MAX_OBSERVATIONS(2),
     MIN_COURSE(2),
     STUDENTS_AMOUNT(ROOMS_ON_FLOOR.value * STUDENTS_IN_ROOM.value * FLOORS_IN_HOSTEL.value),
-    VISITORS_AMOUNT(5),
-    YEAR_LENGTH(6);
+    MAX_VISITORS(5),
+    YEAR_LENGTH(2);
 
     private int value;
 

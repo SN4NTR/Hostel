@@ -19,27 +19,29 @@ public class Commandant implements Administration {
         for (Floor floor : hostel.getFloorList()) {
             if (floor.getHeadman() == null) {
                 for (Room room : floor.getRoomList()) {
-                    List<Student> studentList = room.getStudentList();
+                    if (floor.getHeadman() == null) {
+                        List<Student> studentList = room.getStudentList();
 
-                    for (int i = 0; i < studentList.size(); i++) {
-                        if (studentList.get(i).getCourse() >= Constants.MIN_COURSE.getValue()) {
-                            Student headman = new Headman(hostel);
-                            headman.setCourse(studentList.get(i).getCourse());
-                            headman.setObservations(studentList.get(i).getObservations());
-                            headman.setExpelled(studentList.get(i).isExpelled());
-                            headman.setHostelPaid(studentList.get(i).isHostelPaid());
-                            headman.setFloorNumber(studentList.get(i).getFloorNumber());
-                            headman.setRoomNumber(studentList.get(i).getRoomNumber());
+                        for (int i = 0; i < studentList.size(); i++) {
+                            if (studentList.get(i).getCourse() >= Constants.MIN_COURSE.getValue()) {
+                                Student headman = new Headman(hostel);
+                                headman.setCourse(studentList.get(i).getCourse());
+                                headman.setObservations(studentList.get(i).getObservations());
+                                headman.setExpelled(studentList.get(i).isExpelled());
+                                headman.setHostelPaid(studentList.get(i).isHostelPaid());
+                                headman.setFloorNumber(studentList.get(i).getFloorNumber());
+                                headman.setRoomNumber(studentList.get(i).getRoomNumber());
 
-                            floor.setHeadman(headman);
-                            studentList.set(i, headman);
+                                floor.setHeadman(headman);
+                                studentList.set(i, headman);
+                                System.out.println("Headman is set on floor #" + floor.getNumber());
+                                break;
+                            }
                         }
                     }
                 }
             }
         }
-
-        System.out.println("Headmen are set!");
     }
 
     public void settle(Student student) {
@@ -64,17 +66,35 @@ public class Commandant implements Administration {
                 List<Student> studentList = room.getStudentList();
 
                 for (int i = 0; i < studentList.size(); i++) {
-                    if (studentList.get(i).isExpelled() || !studentList.get(i).isHostelPaid() ||
-                            studentList.get(i).getCourse() > Constants.COURSES_NUMBER.getValue() ||
-                            studentList.get(i).getObservations() == Constants.MAX_OBSERVATIONS.getValue()) {
+                    String reason = null;
+                    boolean needEvict = false;
+
+                    if (studentList.get(i).isExpelled()) {
+                        needEvict = true;
+                        reason = "expelling!";
+                    } else if (!studentList.get(i).isHostelPaid()) {
+                        needEvict = true;
+                        reason = "non-payment!";
+                    } else if (studentList.get(i).getCourse() > Constants.COURSES_NUMBER.getValue()) {
+                        needEvict = true;
+                        reason = "graduation!";
+                    } else if (studentList.get(i).getObservations() == Constants.MAX_OBSERVATIONS.getValue()) {
+                        needEvict = true;
+                        reason = studentList.get(i).getObservations() + " observations!";
+                    }
+
+                    if (needEvict) {
+                        new Security().helpEvict(reason, room.getNumber());
 
                         if (studentList.get(i) instanceof Headman) {
                             floor.setHeadman(null);
                         }
 
+                        room.setFreePlaces(room.getFreePlaces() + 1);
                         studentList.remove(i);
-                        new Security().helpEvict();
-                        System.out.println("Student has been evicted from room #" + room.getNumber() + "!");
+                        i--;
+                    } else {
+                        System.out.println("Student stay live in room #" + room.getNumber());
                     }
                 }
             }

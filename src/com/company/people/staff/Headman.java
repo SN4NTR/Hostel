@@ -22,8 +22,12 @@ public class Headman extends Student implements Administration {
                         }
 
                         System.out.println("Students from room #" + room.getNumber() + " got observations!");
+                    } else {
+                        System.out.println("Room #" + room.getNumber() + " is clear!");
                     }
                 }
+
+                return;
             }
         }
     }

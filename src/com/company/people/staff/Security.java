@@ -16,7 +16,8 @@ public class Security implements Administration {
         }
     }
 
-    public void helpEvict() {
-        System.out.println("Helping to helpEvict...");
+    public void helpEvict(String reason, int roomNumber) {
+        System.out.println("Student has been evicted from room #" + roomNumber +
+                " because of " + reason);
     }
 }

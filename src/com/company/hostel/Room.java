@@ -39,6 +39,7 @@ public class Room extends Floor {
         this.isCleaned = isCleaned;
     }
 
+    @Override
     public int getFreePlaces() {
         return freePlaces;
     }

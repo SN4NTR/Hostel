@@ -15,4 +15,16 @@ public class Hostel {
     public void setFloorList(Floor floor) {
         floorList.add(floor);
     }
+
+    public int getFreePlaces() {
+        int freePlaces = 0;
+
+        for (Floor floor : floorList) {
+            for (Room room : floor.getRoomList()) {
+                freePlaces += Constants.STUDENTS_IN_ROOM.getValue() - room.getStudentList().size();
+            }
+        }
+
+        return freePlaces;
+    }
 }

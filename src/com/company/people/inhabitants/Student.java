@@ -8,7 +8,7 @@ public class Student {
     private int course;
     private int observations;
     private boolean isExpelled;
-    private boolean isHostelPaid = true;
+    private boolean isHostelPaid;
     private int floorNumber;
     private int roomNumber;
 
