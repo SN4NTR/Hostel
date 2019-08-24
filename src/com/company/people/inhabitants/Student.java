@@ -19,7 +19,7 @@ public class Student {
                     if (room.getNumber() == roomNumber) {
                         if (!room.isCleaned()) {
                             room.setCleaned(true);
-                            System.out.println("Room #" + roomNumber + " is cleaned!");
+                            System.out.println("Student cleaned the room #" + roomNumber);
                         } else {
                             System.out.println("Room #" + roomNumber + " is already cleaned!");
                         }

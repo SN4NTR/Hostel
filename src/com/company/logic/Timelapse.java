@@ -26,65 +26,53 @@ public class Timelapse {
         this.commandant = commandant;
     }
 
-    public void start() {
-        int month = 1;
+    public void startYear(int month) {
+        System.out.println("\nMonth " + month);
 
-        while (true) {
-            System.out.println("Month " + month);
+        List<Student> studentList;
+        if ((month - 1) % Constants.YEAR_LENGTH.getValue() == 0) {
+            studentList = new ArrayList<>();
+            settleStudent(month, studentList);
 
-            List<Student> studentList;
-            if ((month - 1) % Constants.YEAR_LENGTH.getValue() == 0) {
-                studentList = new ArrayList<>();
-                settleStudent(month, studentList);
-
-                if (needNewHeadman()) {
-                    System.out.println();
-                    commandant.makeHeadman();
-                }
-            }
-
-            System.out.println("\nRoom cleaning...\n");
-            roomCleaning();
-            System.out.println("\nRoom checking...\n");
-            roomChecking();
-            System.out.println("\nPaying for hostel...\n");
-            payingForHostel();
-
-            int visitorsAmount = (int) (1 + Math.random() * Constants.MAX_VISITORS.getValue());
-            List<Visitor> visitorList = new ArrayList<>(visitorsAmount);
-            new VisitorBuilder().build(visitorList, visitorsAmount);
-            System.out.println("\nChecking visitors passes...\n");
-            security.checkPass(visitorList);
-
-            if (month % (Constants.YEAR_LENGTH.getValue() / 2) == 0) {
-                System.out.println("\nSession time...\n");
-                isSessionPassed();
-            }
-
-            if (month % Constants.YEAR_LENGTH.getValue() == 0) {
-                increaseCourseNumber();
-            }
-
-            System.out.println("\nEvicting...\n");
-            commandant.evict();
             if (needNewHeadman()) {
                 System.out.println();
                 commandant.makeHeadman();
             }
 
-            month++;
-            setRoomCleanness();
-            setHostelPayment();
-
-            if ((month - 1) % Constants.YEAR_LENGTH.getValue() == 0) {
-                System.out.print("Continue? (y / n): ");
-                if ("n".equals(getAnswer("y", "n"))) {
-                    break;
-                }
-
-                resetObservations();
-            }
+            resetObservations();
         }
+
+        System.out.println("\nRoom cleaning...\n");
+        roomCleaning();
+        System.out.println("\nRoom checking...\n");
+        roomChecking();
+        System.out.println("\nPaying for hostel...\n");
+        payingForHostel();
+
+        int visitorsAmount = (int) (1 + Math.random() * Constants.MAX_VISITORS.getValue());
+        List<Visitor> visitorList = new ArrayList<>(visitorsAmount);
+        new VisitorBuilder().build(visitorList, visitorsAmount);
+        System.out.println("\nChecking visitors passes...\n");
+        security.checkPass(visitorList);
+
+        if (month % (Constants.YEAR_LENGTH.getValue() / 2) == 0) {
+            System.out.println("\nSession time...\n");
+            isSessionPassed();
+        }
+
+        if (month % Constants.YEAR_LENGTH.getValue() == 0) {
+            increaseCourseNumber();
+        }
+
+        System.out.println("\nEvicting...\n");
+        commandant.evict();
+        if (needNewHeadman()) {
+            System.out.println();
+            commandant.makeHeadman();
+        }
+
+        setRoomCleanness();
+        setHostelPayment();
     }
 
     private void settleStudent(int month, List<Student> studentList) {
@@ -97,7 +85,7 @@ public class Timelapse {
                 commandant.settle(student);
             }
         } else {
-            System.out.print("\nAdd new students? (y / n): ");
+            System.out.print("Add new students? (y / n): ");
             if ("y".equals(getAnswer("y", "n"))) {
                 addNewStudents(studentList);
 
@@ -109,12 +97,13 @@ public class Timelapse {
     }
 
     private void addNewStudents(List<Student> studentList) {
-        int freePlaces = hostel.getFreePlaces();
+        int freePlaces = commandant.getHostelFreePlaces();
 
         if (freePlaces == 0) {
             System.out.println("There is no free places!");
         } else {
-            System.out.print(freePlaces + " free places in the hotel." + "\nEnter students number: ");
+            System.out.print(freePlaces + " free places in the hotel.");
+            System.out.print("\nEnter students number: ");
             Scanner scanner = new Scanner(System.in);
             int studentsAmount = scanner.nextInt();
             while (studentsAmount <= 0 || studentsAmount > freePlaces) {
@@ -122,6 +111,7 @@ public class Timelapse {
                 studentsAmount = scanner.nextInt();
             }
 
+            System.out.println();
             new StudentBuilder().build(studentList, studentsAmount);
         }
     }
@@ -149,7 +139,7 @@ public class Timelapse {
     private void setRoomCleanness() {
         for (Floor floor : hostel.getFloorList()) {
             for (Room room : floor.getRoomList()) {
-                boolean isRoomClean = (int) (Math.random() * 2) == 1;
+                boolean isRoomClean = getRandom();
 
                 if (isRoomClean) {
                     room.setCleaned(true);
@@ -164,7 +154,7 @@ public class Timelapse {
         for (Floor floor : hostel.getFloorList()) {
             for (Room room : floor.getRoomList()) {
                 for (Student student : room.getStudentList()) {
-                    boolean expelledOrNot = ((int) (Math.random() * 2)) == 1;
+                    boolean expelledOrNot = !getRandom();
 
                     if (expelledOrNot) {
                         System.out.println("Student has failed the session!");
@@ -181,7 +171,7 @@ public class Timelapse {
         for (Floor floor : hostel.getFloorList()) {
             for (Room room : floor.getRoomList()) {
                 for (Student student : room.getStudentList()) {
-                    boolean payOrNot = ((int) (Math.random() * 2)) == 1;
+                    boolean payOrNot = getRandom();
 
                     if (payOrNot) {
                         System.out.println("Student has paid for hostel!");
@@ -216,7 +206,7 @@ public class Timelapse {
         for (Floor floor : hostel.getFloorList()) {
             for (Room room : floor.getRoomList()) {
                 for (Student student : room.getStudentList()) {
-                    boolean cleanOrNot = ((int) (Math.random() * 2)) == 1;
+                    boolean cleanOrNot = getRandom();
 
                     if (cleanOrNot) {
                         student.cleanUp(hostel);
@@ -231,15 +221,17 @@ public class Timelapse {
     private void increaseCourseNumber() {
         for (Floor floor : hostel.getFloorList()) {
             for (Room room : floor.getRoomList()) {
-                if (!room.isCleaned()) {
-                    for (Student student : room.getStudentList()) {
-                        if (!student.isExpelled()) {
-                            student.setCourse(student.getCourse() + 1);
-                        }
+                for (Student student : room.getStudentList()) {
+                    if (!student.isExpelled()) {
+                        student.setCourse(student.getCourse() + 1);
                     }
                 }
             }
         }
+    }
+
+    private boolean getRandom() {
+        return ((int) (Math.random() * 100) < Constants.CHANCE.getValue());
     }
 
     private String getAnswer(String variant1, String variant2) {

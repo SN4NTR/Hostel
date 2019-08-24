@@ -16,14 +16,21 @@ public class Headman extends Student implements Administration {
         for (Floor floor : hostel.getFloorList()) {
             if (floor.getNumber() == getFloorNumber()) {
                 for (Room room : floor.getRoomList()) {
-                    if (!room.isCleaned()) {
-                        for (Student student : room.getStudentList()) {
-                            student.setObservations(student.getObservations() + 1);
-                        }
+                    if (room.getStudentList().size() > 0) {
+                        if (room.getNumber() == getRoomNumber()) {
+                            System.out.println("Room #" + room.getNumber() + " is clear!");
+                        } else {
+                            if (!room.isCleaned()) {
+                                for (Student student : room.getStudentList()) {
+                                    student.setObservations(student.getObservations() + 1);
+                                }
 
-                        System.out.println("Students from room #" + room.getNumber() + " got observations!");
-                    } else {
-                        System.out.println("Room #" + room.getNumber() + " is clear!");
+                                System.out.println("Students from room #" + room.getNumber() +
+                                        " got observations!");
+                            } else {
+                                System.out.println("Room #" + room.getNumber() + " is clear!");
+                            }
+                        }
                     }
                 }
 

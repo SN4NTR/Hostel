@@ -16,7 +16,7 @@ public class Floor extends Hostel {
         return roomList;
     }
 
-    public void setRoomList(Room room) {
+    public void addRoom(Room room) {
         roomList.add(room);
     }
 

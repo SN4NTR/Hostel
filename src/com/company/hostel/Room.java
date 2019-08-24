@@ -16,7 +16,7 @@ public class Room extends Floor {
         return studentList;
     }
 
-    public void setStudentList(Student student) {
+    public void addStudent(Student student) {
         studentList.add(student);
         freePlaces--;
     }
@@ -39,7 +39,6 @@ public class Room extends Floor {
         this.isCleaned = isCleaned;
     }
 
-    @Override
     public int getFreePlaces() {
         return freePlaces;
     }

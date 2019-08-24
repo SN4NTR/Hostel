@@ -15,6 +15,18 @@ public class Commandant implements Administration {
         this.hostel = hostel;
     }
 
+    public int getHostelFreePlaces() {
+        int freePlaces = 0;
+
+        for (Floor floor : hostel.getFloorList()) {
+            for (Room room : floor.getRoomList()) {
+                freePlaces += Constants.STUDENTS_IN_ROOM.getValue() - room.getStudentList().size();
+            }
+        }
+
+        return freePlaces;
+    }
+
     public void makeHeadman() {
         for (Floor floor : hostel.getFloorList()) {
             if (floor.getHeadman() == null) {
@@ -50,7 +62,7 @@ public class Commandant implements Administration {
                 if (room.getFreePlaces() > 0) {
                     student.setFloorNumber(floor.getNumber());
                     student.setRoomNumber(room.getNumber());
-                    room.setStudentList(student);
+                    room.addStudent(student);
                     System.out.println("Student has been settled in room #" + room.getNumber());
                     return;
                 }

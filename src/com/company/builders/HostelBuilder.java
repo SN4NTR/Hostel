@@ -11,7 +11,7 @@ public class HostelBuilder {
         for (int i = 0; i < Constants.FLOORS_IN_HOSTEL.getValue(); i++) {
             Floor floor = new Floor();
             floor.setNumber(i + 1);
-            hostel.setFloorList(floor);
+            hostel.addFloor(floor);
 
             for (int j = 0; j < Constants.ROOMS_ON_FLOOR.getValue(); j++) {
                 Room room = new Room();
@@ -22,7 +22,7 @@ public class HostelBuilder {
                     room.setCleaned(true);
                 }
 
-                floor.setRoomList(room);
+                floor.addRoom(room);
             }
         }
     }
