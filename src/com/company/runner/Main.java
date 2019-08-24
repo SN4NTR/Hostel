@@ -16,8 +16,8 @@ public class Main {
         HostelBuilder hostelBuilder = new HostelBuilder();
         hostelBuilder.build(hostel);
 
-        Commandant commandant = new Commandant(hostel);
-        Security security = new Security();
+        Commandant commandant = hostel.getCommandant();
+        Security security = hostel.getSecurity();
 
         Timelapse timelapse = new Timelapse(hostel, security, commandant);
 

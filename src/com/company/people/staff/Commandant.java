@@ -79,24 +79,24 @@ public class Commandant implements Administration {
 
                 for (int i = 0; i < studentList.size(); i++) {
                     String reason = null;
-                    boolean needEvict = false;
+                    boolean needToEvict = false;
 
                     if (studentList.get(i).isExpelled()) {
-                        needEvict = true;
+                        needToEvict = true;
                         reason = "expelling!";
                     } else if (!studentList.get(i).isHostelPaid()) {
-                        needEvict = true;
+                        needToEvict = true;
                         reason = "non-payment!";
                     } else if (studentList.get(i).getCourse() > Constants.COURSES_NUMBER.getValue()) {
-                        needEvict = true;
+                        needToEvict = true;
                         reason = "graduation!";
                     } else if (studentList.get(i).getObservations() == Constants.MAX_OBSERVATIONS.getValue()) {
-                        needEvict = true;
+                        needToEvict = true;
                         reason = studentList.get(i).getObservations() + " observations!";
                     }
 
-                    if (needEvict) {
-                        new Security().helpEvict(reason, room.getNumber());
+                    if (needToEvict) {
+                        hostel.getSecurity().helpEvict(reason, room.getNumber());
 
                         if (studentList.get(i) instanceof Headman) {
                             floor.setHeadman(null);

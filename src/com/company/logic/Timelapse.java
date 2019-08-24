@@ -31,6 +31,7 @@ public class Timelapse {
 
         List<Student> studentList;
         if ((month - 1) % Constants.YEAR_LENGTH.getValue() == 0) {
+            System.out.println("\nStudent's settlement...\n");
             studentList = new ArrayList<>();
             settleStudent(month, studentList);
 
@@ -42,22 +43,23 @@ public class Timelapse {
             resetObservations();
         }
 
-        System.out.println("\nRoom cleaning...\n");
-        roomCleaning();
-        System.out.println("\nRoom checking...\n");
-        roomChecking();
+        System.out.println("\nRooms cleaning...\n");
+        clearRoom();
+        System.out.println("\nRooms checking...\n");
+        checkRoom();
         System.out.println("\nPaying for hostel...\n");
-        payingForHostel();
+        payForHostel();
 
         int visitorsAmount = (int) (1 + Math.random() * Constants.MAX_VISITORS.getValue());
         List<Visitor> visitorList = new ArrayList<>(visitorsAmount);
         new VisitorBuilder().build(visitorList, visitorsAmount);
+
         System.out.println("\nChecking visitors passes...\n");
         security.checkPass(visitorList);
 
         if (month % (Constants.YEAR_LENGTH.getValue() / 2) == 0) {
             System.out.println("\nSession time...\n");
-            isSessionPassed();
+            passSession();
         }
 
         if (month % Constants.YEAR_LENGTH.getValue() == 0) {
@@ -72,47 +74,39 @@ public class Timelapse {
         }
 
         setRoomCleanness();
-        setHostelPayment();
+        resetHostelPayment();
     }
 
     private void settleStudent(int month, List<Student> studentList) {
-        System.out.println("\nStudent's settlement...\n");
-
         if (month == 1) {
             new StudentBuilder().build(studentList, Constants.STUDENTS_AMOUNT.getValue());
-
-            for (Student student : studentList) {
-                commandant.settle(student);
-            }
         } else {
             System.out.print("Add new students? (y / n): ");
             if ("y".equals(getAnswer("y", "n"))) {
-                addNewStudents(studentList);
+                int freePlaces = commandant.getHostelFreePlaces();
 
-                for (Student student : studentList) {
-                    commandant.settle(student);
+                if (freePlaces == 0) {
+                    System.out.println("There is no free places!");
+                } else {
+                    System.out.print(freePlaces + " free places in the hotel.");
+                    System.out.print("\nEnter students number: ");
+                    Scanner scanner = new Scanner(System.in);
+                    int studentsAmount = scanner.nextInt();
+
+                    while (studentsAmount <= 0 || studentsAmount > freePlaces) {
+                        System.out.print("Invalid value! Try again: ");
+                        studentsAmount = scanner.nextInt();
+                    }
+
+                    scanner.nextLine();
+                    System.out.println();
+                    new StudentBuilder().build(studentList, studentsAmount);
                 }
             }
         }
-    }
 
-    private void addNewStudents(List<Student> studentList) {
-        int freePlaces = commandant.getHostelFreePlaces();
-
-        if (freePlaces == 0) {
-            System.out.println("There is no free places!");
-        } else {
-            System.out.print(freePlaces + " free places in the hotel.");
-            System.out.print("\nEnter students number: ");
-            Scanner scanner = new Scanner(System.in);
-            int studentsAmount = scanner.nextInt();
-            while (studentsAmount <= 0 || studentsAmount > freePlaces) {
-                System.out.print("Invalid value! Try again: ");
-                studentsAmount = scanner.nextInt();
-            }
-
-            System.out.println();
-            new StudentBuilder().build(studentList, studentsAmount);
+        for (Student student : studentList) {
+            commandant.settle(student);
         }
     }
 
@@ -139,7 +133,7 @@ public class Timelapse {
     private void setRoomCleanness() {
         for (Floor floor : hostel.getFloorList()) {
             for (Room room : floor.getRoomList()) {
-                boolean isRoomClean = getRandom();
+                boolean isRoomClean = !getRandom();
 
                 if (isRoomClean) {
                     room.setCleaned(true);
@@ -150,7 +144,7 @@ public class Timelapse {
         }
     }
 
-    private void isSessionPassed() {
+    private void passSession() {
         for (Floor floor : hostel.getFloorList()) {
             for (Room room : floor.getRoomList()) {
                 for (Student student : room.getStudentList()) {
@@ -167,7 +161,7 @@ public class Timelapse {
         }
     }
 
-    private void payingForHostel() {
+    private void payForHostel() {
         for (Floor floor : hostel.getFloorList()) {
             for (Room room : floor.getRoomList()) {
                 for (Student student : room.getStudentList()) {
@@ -184,7 +178,7 @@ public class Timelapse {
         }
     }
 
-    private void setHostelPayment() {
+    private void resetHostelPayment() {
         for (Floor floor : hostel.getFloorList()) {
             for (Room room : floor.getRoomList()) {
                 for (Student student : room.getStudentList()) {
@@ -194,22 +188,24 @@ public class Timelapse {
         }
     }
 
-    private void roomChecking() {
+    private void checkRoom() {
         for (Floor floor : hostel.getFloorList()) {
             if (floor.getHeadman() != null) {
                 floor.getHeadman().checkRooms();
+            } else {
+                System.out.println("No any headmen on the floor #" + floor.getNumber());
             }
         }
     }
 
-    private void roomCleaning() {
+    private void clearRoom() {
         for (Floor floor : hostel.getFloorList()) {
             for (Room room : floor.getRoomList()) {
                 for (Student student : room.getStudentList()) {
-                    boolean cleanOrNot = getRandom();
+                    boolean clearOrNot = getRandom();
 
-                    if (cleanOrNot) {
-                        student.cleanUp(hostel);
+                    if (clearOrNot) {
+                        student.cleanUpRoom(hostel);
                     } else {
                         System.out.println("Student forgot to clean up!");
                     }

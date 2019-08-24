@@ -12,7 +12,7 @@ public class Student {
     private int floorNumber;
     private int roomNumber;
 
-    public void cleanUp(Hostel hostel) {
+    public void cleanUpRoom(Hostel hostel) {
         for (Floor floor : hostel.getFloorList()) {
             if (floor.getNumber() == floorNumber) {
                 for (Room room : floor.getRoomList()) {
