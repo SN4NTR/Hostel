@@ -17,13 +17,13 @@ import java.util.Scanner;
 
 public class Timelapse {
     private Hostel hostel;
-    private Security security;
     private Commandant commandant;
+    private Security security;
 
-    public Timelapse(Hostel hostel, Security security, Commandant commandant) {
+    public Timelapse(Hostel hostel) {
         this.hostel = hostel;
-        this.security = security;
-        this.commandant = commandant;
+        commandant = hostel.getCommandant();
+        security = hostel.getSecurity();
     }
 
     public void startYear(int month) {

@@ -10,7 +10,6 @@ import com.company.logic.Timelapse;
 import java.util.Scanner;
 
 public class Main {
-
     public static void main(String[] args) {
         System.out.print("Number of floors in the hostel: ");
         int floorsNumber = getValue();
@@ -26,11 +25,12 @@ public class Main {
         Hostel hostel = new Hostel();
         HostelBuilder hostelBuilder = new HostelBuilder();
         hostelBuilder.build(hostel);
+        Commandant commandant = new Commandant(hostel);
+        Security security = new Security();
+        hostel.setCommandant(commandant);
+        hostel.setSecurity(security);
 
-        Commandant commandant = hostel.getCommandant();
-        Security security = hostel.getSecurity();
-
-        Timelapse timelapse = new Timelapse(hostel, security, commandant);
+        Timelapse timelapse = new Timelapse(hostel);
 
         int month = 1;
         while (true) {
