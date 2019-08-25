@@ -106,7 +106,7 @@ public class Commandant implements Administration {
                         studentList.remove(i);
                         i--;
                     } else {
-                        System.out.println("Student stay live in room #" + room.getNumber());
+                        System.out.println("Student stays to live in room #" + room.getNumber());
                     }
                 }
             }
