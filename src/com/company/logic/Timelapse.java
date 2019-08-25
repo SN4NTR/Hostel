@@ -28,6 +28,15 @@ public class Timelapse {
 
     public void startYear(int month) {
         System.out.println("\nMonth " + month);
+        if ((month - 1) % Constants.YEAR_LENGTH.getValue() == 0) {
+            int year = month / Constants.YEAR_LENGTH.getValue();
+
+            if (year == 1) {
+                System.out.println(year + " year past");
+            } else {
+                System.out.println(year + " years past");
+            }
+        }
 
         List<Student> studentList;
         if ((month - 1) % Constants.YEAR_LENGTH.getValue() == 0) {
